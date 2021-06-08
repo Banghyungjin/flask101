@@ -1,0 +1,17 @@
+{% extends "layouts/layouts_red.html" %}
+{% block body %}
+<h1 class="display-1">WELCOME !</h1>
+<p class="lead">This is graphes page</p>
+<hr class="my-4">
+<div>
+    <a class="btn btn-primary btn-lg" href="/" role="button">HOME</a>
+    <a class="btn btn-success btn-lg" href="/about" role="button">ABOUT</a>
+    <a class="btn btn-warning btn-lg" href="/articles" role="button">ARTICLES</a>
+</div>
+<div>
+    <img src="{{url_for('fig', mean = mean, var = var)}}" alt="Image Broken" height={{height}} width = {{width}}>
+</div>
+<p></p>
+
+
+{% endblock %}
