@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, redirect, flash, session, send_file
 from passlib.hash import sha256_crypt
+from bs4 import BeautifulSoup
+from datetime import datetime
+from io import BytesIO, StringIO  # 그래프를 이미지로 저장하기위한 변환 라이브러리
 import pymysql
 import matplotlib.pyplot as plt
 import numpy as np
-from io import BytesIO, StringIO  # 그래프를 이미지로 저장하기위한 변환 라이브러리
+import requests
 
 app = Flask(__name__)
 
@@ -66,7 +69,29 @@ def register():
 @app.route('/log_out')
 def log_out():
     session.clear()
-    return render_template("log_in.html")
+    return redirect("/")
+
+
+# 오늘의 네이버 웹툰 랭킹
+@app.route('/webtoons', methods=["GET", "POST"])
+def webtoons():
+    if session.get('is_logged') is not None:
+        res = requests.get('https://comic.naver.com/webtoon/weekday.nhn')
+        soup = BeautifulSoup(res.text, 'html.parser')
+        title_list = soup.select('a.title')
+        titles = []
+        count = 1
+        for i in title_list:
+            if i.get('href')[-3:] == datetime.today().strftime('%A')[:3].lower():
+                title = [f'{count:2d}위', i.get_text(), i.get('href')]
+                titles.append(title)
+                count += 1
+            else:
+                continue
+        return render_template("webtoons.html", webtoons=titles, today=datetime.today().strftime('%A').upper())
+    else:
+        return render_template("log_in.html")
+
 
 # db 목록 읽어오는 기능
 @app.route('/articles', methods=["GET", "POST"])
@@ -160,15 +185,15 @@ def about():
 @app.route('/fig/<int:mean>_<int:var>')
 def fig(mean, var):
     if session.get('is_logged') is not None:
-        plt.figure(figsize = (4,3))
+        plt.figure(figsize=(4, 3))
         xs = np.random.normal(mean, var, 100)
         ys = np.random.normal(mean, var, 100)
-        plt.scatter(xs,ys, s= 100, marker = 'o', color ='red', alpha = 0.3)
+        plt.scatter(xs, ys, s=100, marker='o', color='red', alpha=0.3)
         img = BytesIO()
-        plt.savefig(img, format = 'png', dpi = 200)
+        plt.savefig(img, format='png', dpi=200)
         img.seek(0)
         # print(xs)
-        return send_file(img, mimetype = 'image/png')
+        return send_file(img, mimetype='image/png')
     else:
         return render_template("log_in.html")
 
@@ -179,7 +204,7 @@ def graphes():
         # m, v = m_v.split('_')
         # m, v = int(m), int(v)
         m, v = 3, 5
-        return render_template("graphes.html", mean = m, var = v, width = 1000, height = 1000)
+        return render_template("graphes.html", mean=m, var=v, width=1000, height=1000)
     else:
         return render_template("log_in.html")
 
