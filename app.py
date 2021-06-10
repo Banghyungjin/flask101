@@ -88,7 +88,9 @@ def webtoons():
                 count += 1
             else:
                 continue
-        return render_template("webtoons.html", webtoons=titles, today=datetime.today().strftime('%A').upper())
+        return render_template("webtoons.html", webtoons=titles,
+                               today=datetime.today().strftime('%A').upper(),
+                               webtoonsize=len(titles))
     else:
         return render_template("log_in.html")
 
@@ -210,4 +212,4 @@ def graphes():
 
 
 if __name__ == '__main__':
-    app.run(debug=1)
+    app.run()
