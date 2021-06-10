@@ -20,13 +20,12 @@
                 <input class="form-control" type="text" name='Title' placeholder="input your title" required>
             </div>
             <div class="form-group">
-                <label>  - DESCRIPTON -</label>
+                <label>  - DESCRIPTION -</label>
                 <textarea class="form-control" rows="15" name="Desc" placeholder="input your description" required></textarea>
             </div>
             <div class="form-group">
-                <label>  - AUHOR -</label>
-                <input type="text" name='Author' class="form-control" placeholder="input your name" required>
-                
+                <label>  - AUTHOR -</label>
+                <input type="text" name='Author' class="form-control" value = {{ user }} disabled>
             </div>
             <div class="form-group">
                 <input class="btn btn-success btn-lg btn-block" type="submit" value="ADD" >

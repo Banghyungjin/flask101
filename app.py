@@ -58,7 +58,6 @@ def register():
         val = [name, email, id, psword]
         cursor.execute(sql_insert, val)
         db.commit()
-        topic = cursor.fetchall()
         db.close()
         return redirect("/")
     else:
@@ -110,7 +109,7 @@ def notes():
         return render_template("log_in.html")
 
 
-# articles 선택한 걸 자세히 표시하는 기능
+# notes 선택한 걸 자세히 표시하는 기능
 @app.route('/note/<int:id>')  # <id> 를 params 라고 해서 메소드에서 써먹을 수 있다.
 def note(id):
     cursor = db.cursor()
@@ -122,23 +121,22 @@ def note(id):
     return render_template("note.html", article=topic)
 
 
-# 새로운 article 추가하는 기능
+# 새로운 note 추가하는 기능
 @app.route('/add_notes', methods=["GET", "POST"])
 def add_notes():
     cursor = db.cursor()
     if request.method == "POST":
         desc = request.form['Desc']
         title = request.form['Title']
-        author = request.form['Author']
+        author = session.get('is_logged')
         sql_insert = "INSERT INTO `flasktest`.`topic` (`title`, `body`, `author`) VALUES (%s, %s, %s);"
         val = [title, desc, author]
         cursor.execute(sql_insert, val)
         db.commit()
-        topic = cursor.fetchall()
         # db.close()
         return redirect("/notes")
     else:
-        return render_template("add_notes.html")
+        return render_template("add_notes.html", user=session.get('is_logged'))
 
 
 # article을 제거하는 기능
