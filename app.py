@@ -96,8 +96,8 @@ def webtoons():
 
 
 # db 목록 읽어오는 기능
-@app.route('/articles', methods=["GET", "POST"])
-def articles():
+@app.route('/notes', methods=["GET", "POST"])
+def notes():
     if session.get('is_logged') is not None:
         cursor = db.cursor()
         sql = 'SELECT * FROM topic'
@@ -105,26 +105,26 @@ def articles():
         topics = cursor.fetchall()
         # articles = Articles()
         # print(articles[0]['title'])
-        return render_template("articles.html", articles=topics)
+        return render_template("notes.html", notes=topics, notesize=len(topics))
     else:
         return render_template("log_in.html")
 
 
 # articles 선택한 걸 자세히 표시하는 기능
-@app.route('/article/<int:id>')  # <id> 를 params 라고 해서 메소드에서 써먹을 수 있다.
-def article(id):
+@app.route('/note/<int:id>')  # <id> 를 params 라고 해서 메소드에서 써먹을 수 있다.
+def note(id):
     cursor = db.cursor()
     # articles = Articles()
     # article = articles[id - 1]
     sql = 'SELECT * FROM topic WHERE id = {};'.format(id)
     cursor.execute(sql)
     topic = cursor.fetchone()
-    return render_template("article.html", article=topic)
+    return render_template("note.html", article=topic)
 
 
 # 새로운 article 추가하는 기능
-@app.route('/add_articles', methods=["GET", "POST"])
-def add_articles():
+@app.route('/add_notes', methods=["GET", "POST"])
+def add_notes():
     cursor = db.cursor()
     if request.method == "POST":
         desc = request.form['Desc']
@@ -136,9 +136,9 @@ def add_articles():
         db.commit()
         topic = cursor.fetchall()
         # db.close()
-        return redirect("/articles")
+        return redirect("/notes")
     else:
-        return render_template("add_articles.html")
+        return render_template("add_notes.html")
 
 
 # article을 제거하는 기능
@@ -150,11 +150,11 @@ def delete(id):
     db.commit()
     topic = cursor.fetchall()
     # db.close()
-    return redirect("/articles")
+    return redirect("/notes")
 
 
 # article을 수정하는 기능
-@app.route('/change_articles/<int:id>', methods=["GET", "POST"])
+@app.route('/change_notes/<int:id>', methods=["GET", "POST"])
 def change_articles(id):
     cursor = db.cursor()
     if request.method == "POST":
@@ -166,13 +166,13 @@ def change_articles(id):
         cursor.execute(sql_change, val)
         db.commit()
         topic = cursor.fetchall()
-        return redirect("/articles")
+        return redirect("/notes")
     else:
         cursor = db.cursor()
     sql = 'SELECT * FROM topic WHERE id = {};'.format(id)
     cursor.execute(sql)
     topic = cursor.fetchone()
-    return render_template("change_articles.html", article=topic)
+    return render_template("change_notes.html", article=topic)
 
 
 # 정보화면 - 아직 만드는 중

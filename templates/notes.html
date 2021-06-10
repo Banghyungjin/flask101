@@ -1,20 +1,20 @@
 {% extends "layouts/layouts_menu.html" %}
 {% block body %}
-<h1 class="display-2">ARTICLES PAGE</h1>
-<p class="lead">This is articles page. To see the detailed description, click the title.</p>
+<h1 class="display-2">NOTES PAGE</h1>
+<p class="lead">This is note page where I jot down some gibberish. To see the detailed description, click the title.</p>
 <hr class="my-4">
 <div>
-    <a class="btn btn-primary btn-lg" href="/" role="button">HOME</a>
-    <a class="btn btn-success btn-lg" href="/about" role="button">ABOUT ME</a>
-    <a class="btn btn-success btn-lg" href="/webtoons" role="button">WEBTOONS</a>
-    <a class="btn btn-danger btn-lg" href="/graphes" role="button">GRAPHES</a>
+{#    <a class="btn btn-primary btn-lg" href="/" role="button">HOME</a>#}
+{#    <a class="btn btn-success btn-lg" href="/about" role="button">ABOUT ME</a>#}
+{#    <a class="btn btn-success btn-lg" href="/webtoons" role="button">WEBTOONS</a>#}
+{#    <a class="btn btn-danger btn-lg" href="/graphes" role="button">GRAPHES</a>#}
 </div>
 
 <p></p>
 
 <div class="card mb-4">
     <div class="card-header">
-        <h3>ARTICLES TABLE</h3>
+        <h3>For now, we have {{ notesize }} gibberish</h3>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -31,24 +31,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                  {% for article in articles %}
+                  {% for note in notes %}
                     
                     <tr>
-                        <th scope="row">{{ article[0] }}</th>
-                        <td><a href="/article/{{article[0]}}">{{ article[1] }}</a></td>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td><a href="/note/{{note[0]}}">{{ note[1] }}</a></td>
                         <td>
-                            {% if article[2]|length > 50 %}
-                            <a>{{ article[2][0:50] }}...</a>
+                            {% if note[2]|length > 50 %}
+                            <a>{{ note[2][0:50] }}...</a>
                             {% else %}
-                            <a>{{ article[2] }}</a>
+                            <a>{{ note[2] }}</a>
                             {% endif %}
                         </td>
-                        <td><a>{{ article[3] }}</a></td>
-                        <td><a>{{ article[4] }}</a></td>
-                        <td><form action="/change_articles/{{article[0]}}" method="GET">
+                        <td><a>{{ note[3] }}</a></td>
+                        <td><a>{{ note[4] }}</a></td>
+                        <td><form action="/change_notes/{{note[0]}}" method="GET">
                             <input type="submit" class="btn btn-warning" value = "Edit"></button>
                         </form></td>
-                        <td><form action="/delete/{{article[0]}}" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                        <td><form action="/delete/{{note[0]}}" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?')">
                             <input type="submit" class="btn btn-danger" value = "Del"></button>
                         </form></td>
                     </tr>
@@ -57,7 +57,7 @@
             </table>
         </div>
         <p></p>
-        <div><a class="btn btn-success btn-lg btn-block" href="/add_articles" role="button">ADD</a></div>
+        <div><a class="btn btn-success btn-lg btn-block" href="/add_notes" role="button">ADD</a></div>
     </div>
 </div>
     
