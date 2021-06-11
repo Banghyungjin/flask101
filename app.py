@@ -25,7 +25,10 @@ db = pymysql.connect(
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if session.get('is_logged') is not None:
-        return render_template("index.html", user=session.get('is_logged'))
+        if session.get('is_logged') == "g":
+            return render_template("index.html", user="GUEST")
+        else:
+            return render_template("index.html", user=session.get('is_logged'))
     elif request.method == "POST":
         cursor = db.cursor()
         sql = 'SELECT PW FROM login where ID = %s;'
