@@ -24,3 +24,7 @@
 3. 오늘의 네이버 웹툰 순위를 크롤링해와 표시하는 기능 구현
 4. about me 탭에 내용 추가
 5. about me 탭에 bootstrap의 carousel 기능 사용
+
+### <li> 2021-06-11
+1. requirements.txt 파일 추가
+2. 게스트 로그인 기능 추가 (notes 페이지에서 추가, 수정, 삭제 불가능하고 보기만 가능)
