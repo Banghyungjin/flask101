@@ -29,20 +29,27 @@ def index():
     elif request.method == "POST":
         cursor = db.cursor()
         sql = 'SELECT PW FROM login where ID = %s;'
-        usid = request.form['Username']
-        ps = request.form['psword']
-        cursor.execute(sql, usid)
+        userID = request.form['Username']
+        userPW = request.form['psword']
+        cursor.execute(sql, userID)
         user = cursor.fetchone()
         if user is None:
             flash("없는 아이디입니다.")
-        elif sha256_crypt.verify(ps, user[0]):
-            session['is_logged'] = usid
+        elif sha256_crypt.verify(userPW, user[0]):
+            session['is_logged'] = userID
             return render_template("index.html", user=session.get('is_logged'))
         else:
             flash("틀린 비밀번호입니다.")
         return render_template("log_in.html")
     else:
         return render_template("log_in.html")
+
+
+# 게스트 로그인
+@app.route('/guest', methods=['GET', 'POST'])
+def guest():
+    session['is_logged'] = "g"
+    return render_template("index.html", user="GUEST")
 
 
 # 회원가입 기능
@@ -52,10 +59,10 @@ def register():
         cursor = db.cursor()
         name = request.form['Name']
         email = request.form['Email']
-        id = request.form['Username']
-        psword = sha256_crypt.encrypt(request.form['psword'])
+        userID = request.form['Username']
+        userPW = sha256_crypt.encrypt(request.form['psword'])
         sql_insert = "INSERT INTO `login` (`name`, `email`, `ID` , `PW`) VALUES (%s, %s, %s, %s);"
-        val = [name, email, id, psword]
+        val = [name, email, userID, userPW]
         cursor.execute(sql_insert, val)
         db.commit()
         db.close()
@@ -98,13 +105,18 @@ def webtoons():
 @app.route('/notes', methods=["GET", "POST"])
 def notes():
     if session.get('is_logged') is not None:
+        print(session.get('is_logged'))
         cursor = db.cursor()
         sql = 'SELECT * FROM topic'
         cursor.execute(sql)
         topics = cursor.fetchall()
         # articles = Articles()
         # print(articles[0]['title'])
-        return render_template("notes.html", notes=topics, notesize=len(topics))
+        if session.get('is_logged') == "g":
+            return render_template("notes_for_guest.html", notes=topics, notesize=len(topics))
+        else :
+            return render_template("notes.html", notes=topics, notesize=len(topics))
+
     else:
         return render_template("log_in.html")
 
