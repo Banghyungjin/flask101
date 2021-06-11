@@ -108,7 +108,7 @@ def webtoons():
 @app.route('/notes', methods=["GET", "POST"])
 def notes():
     if session.get('is_logged') is not None:
-        print(session.get('is_logged'))
+        #print(session.get('is_logged'))
         cursor = db.cursor()
         sql = 'SELECT * FROM topic'
         cursor.execute(sql)
@@ -197,13 +197,13 @@ def about():
         return render_template("log_in.html")
 
 
-@app.route('/fig/<int:mean>_<int:var>')
-def fig(mean, var):
+@app.route('/fig/<float:mean>_<float:var>_<int:size>_<string:color>')
+def fig(mean, var, size, color):
     if session.get('is_logged') is not None:
-        plt.figure(figsize=(4, 3))
-        xs = np.random.normal(mean, var, 100)
-        ys = np.random.normal(mean, var, 100)
-        plt.scatter(xs, ys, s=100, marker='o', color='red', alpha=0.3)
+        plt.figure(figsize=(10, 10))
+        xs = np.random.normal(mean, var, size)
+        ys = np.random.normal(mean, var, size)
+        plt.scatter(xs, ys, s=50, marker='o', color=color, alpha=0.4)
         img = BytesIO()
         plt.savefig(img, format='png', dpi=200)
         img.seek(0)
@@ -213,13 +213,17 @@ def fig(mean, var):
         return render_template("log_in.html")
 
 
-@app.route('/graphes/')
+@app.route('/graphes/', methods=["GET", "POST"])
 def graphes():
     if session.get('is_logged') is not None:
-        # m, v = m_v.split('_')
-        # m, v = int(m), int(v)
-        m, v = 3, 5
-        return render_template("graphes.html", mean=m, var=v, width=1000, height=1000)
+        if request.method == "GET":
+            m, v = 3, 5
+            return render_template("graphes.html", mean=m, var=v, size=0, color='#000000', width=500, height=500)
+        else:
+            color = request.form['color']
+            m, v = 3, 5
+            size = request.form['number']
+            return render_template("graphes.html", mean=m, var=v, size=size, color=color, width=500, height=500)
     else:
         return render_template("log_in.html")
 
