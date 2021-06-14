@@ -1,7 +1,7 @@
 {% extends "layouts/layouts_red.html" %}
 {% block body %}
-<h1 class="display-1">WELCOME !</h1>
-<p class="lead">This is graphes page</p>
+<h1 class="display-1">DRAW BY YOURSELF!</h1>
+<p class="lead">This is graph page</p>
 <hr class="my-4">
 
 <div>
@@ -21,6 +21,12 @@
         <input type="range" name='number' max="500" min="0" style="width: 30%" value="{{ size }}"
         oninput="document.getElementById('size_value').innerHTML=this.value;">
         <span id="size_value" >{{ size }}</span>
+    </div>
+    <div class="form-group">
+        점 크기 선택 (50 ~ 300) =
+        <input type="range" name='var' max="300" min="50" style="width: 30%" value="{{ var }}"
+        oninput="document.getElementById('dot_size').innerHTML=this.value;">
+        <span id="dot_size" >{{ var }}</span>
     </div>
 {#            <div class="form-group">#}
 {#                <label>  - DESCRIPTION -</label>#}

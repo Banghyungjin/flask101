@@ -201,9 +201,9 @@ def about():
 def fig(mean, var, size, color):
     if session.get('is_logged') is not None:
         plt.figure(figsize=(10, 10))
-        xs = np.random.normal(mean, var, size)
-        ys = np.random.normal(mean, var, size)
-        plt.scatter(xs, ys, s=50, marker='o', color=color, alpha=0.4)
+        xs = np.random.normal(mean, 5, size)
+        ys = np.random.normal(mean, 5, size)
+        plt.scatter(xs, ys, s=var, marker='o', color=color, alpha=0.4)
         img = BytesIO()
         plt.savefig(img, format='png', dpi=200)
         img.seek(0)
@@ -217,16 +217,17 @@ def fig(mean, var, size, color):
 def graphes():
     if session.get('is_logged') is not None:
         if request.method == "GET":
-            m, v = 3, 5
+            m, v = 3, 50
             return render_template("graphes.html", mean=m, var=v, size=0, color='#000000', width=500, height=500)
         else:
             color = request.form['color']
-            m, v = 3, 5
+            m = 3
+            var = request.form['var']
             size = request.form['number']
-            return render_template("graphes.html", mean=m, var=v, size=size, color=color, width=500, height=500)
+            return render_template("graphes.html", mean=m, var=var, size=size, color=color, width=500, height=500)
     else:
         return render_template("log_in.html")
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
